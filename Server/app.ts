@@ -14,11 +14,23 @@ import uploadRouter from './routes/uploadRouter';
 dotenv.config();
 const app = express();
 //connect to database
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/e-commerce', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose
+  .connect(process.env.MONGODB_URL as string, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => console.log('The database has been connceted'))
+  .catch((err) => console.log('DB CONNECT ERR', err));
+
+const corsOptions = {
+  //To allow requests from client
+  origin: [`${process.env.REACTURL}`],
+  credentials: true,
+  exposedHeaders: ['set-cookie'],
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 // view engine setup
 // app.set('views', path.join(__dirname, '..', 'views'));
